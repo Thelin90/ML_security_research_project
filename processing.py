@@ -3,6 +3,7 @@
 import csv
 import json
 from sklearn import svm
+from sklearn.model_selection import KFold, cross_val_score
 from sklearn.metrics import accuracy_score
 import netaddr
 from itertools import chain
@@ -120,6 +121,8 @@ for k in range(9):
     bad_targets = targets1.count(1)
     if(bad_targets>0):
         SML(dataset1, targets1, 0.01, 10)
+
+
 
 
 #createJsonFile('Logs/harvest007.csv', 'Logs/_targets7.json')
