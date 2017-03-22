@@ -63,11 +63,16 @@ def getDatasetFromCsv (csvFile):
         if has_header:
             next(reader)
 
+        value = 0
         for row in reader:
             if row[1] == 'IPv4':
                 data_arr.append([float(int(netaddr.IPAddress(row[0])))])
             elif row[1] == 'FQDN':
-                data_arr.append([-1.0])
+                s = row[0]
+                s = ''.join([(str(ord(x) - 96) if x.isalpha() else x) for x in list(row[0])])
+                s = ''.join( c for c in s if c not in '?:!/;.-' )
+                s = float(s)
+                data_arr.append([s])
             elif row[1] == '':
                 data_arr.append([-1.0])
 
@@ -86,25 +91,16 @@ targets=setTargets('_targets.json')
 #test = int(netaddr.IPAddress(dataset[0][0]))
 
 #test = float(test)
-
 #print test
 
 print len(dataset)
 print len(targets)
 
-test_dataset = []
-test_targets = []
 
-for i in range (1, 116404):
-    test_dataset.append(dataset[i])
-    test_targets.append(targets[i])
-
-print len(test_targets)
-print len(test_dataset)
 
 #for i in range(1, 11):
     #for j in range(90, 101):
-SML(test_dataset, test_targets, 0.01, 10)
+SML(dataset, targets, 0.01, 10)
 #print "Gamma: ", float((i / 1000.0))
 #print "Accuracy: ", accuracy * 100
 #print "C: ", j
@@ -112,7 +108,7 @@ SML(test_dataset, test_targets, 0.01, 10)
 #-------------------------------------------------------------------#
 '''
 Personal Record for SVC
-Accuracy:
-Gamma:
-C:
+Accuracy: 98.7961096432
+Gamma: 0.01
+C: 10
 '''
