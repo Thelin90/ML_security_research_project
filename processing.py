@@ -4,6 +4,7 @@ import csv
 import json
 import netaddr
 from itertools import chain
+import socket
 
 data=[]
 accuracy=0
@@ -33,14 +34,15 @@ def setTargets (fileName):
             ret_arr.append(1.0) #bad
         elif items['notes'] == 'Spamming':
             ret_arr.append(1.0) #bad
-        else:
+        elif items['notes'] == 'Scanning Host':
+            ret_arr.append(0.0) #good
+        elif items['notes'] == '':
             ret_arr.append(0.0) #good
 
     return ret_arr
 
 '''
     Split a file into multiple output files.
-
     The first line read from 'filename' is a header line that is copied to
     every output file. The remaining lines are split into blocks of at
     least 'size' characters and written to output files whose names
@@ -60,6 +62,38 @@ def split_file(filename, pattern, size):
                     if n >= size:
                         break
 
+def stringToFloat(arr):
+    if(len(arr[4])>0):
+        notes = ''.join([(str(ord(x) - 96) if x.isalpha() else x) for x in list(arr[4])])
+        notes = ''.join(c for c in notes if c not in '?:!/;.-')
+        notes = notes.replace(" ", "")
+        notes = float(notes)
+        notes = (notes/10000)
+        return notes
+    else:
+        return -3.0
+
+def typeToFloat(arr):
+    ipv4 = float(len(arr[1]))
+    return ipv4
+
+def dateToFloat(arr):
+    date = float(''.join(c for c in arr[5] if c.isdigit()))
+    return date
+
+def ipv4ToFloat(arr):
+    ip = float(int(netaddr.IPAddress(arr[0])))
+    return ip
+
+def fqdnIpToFloat(arr):
+    ip = socket.gethostbyname(arr[0])
+    ip = ''.join(c for c in ip if c not in '?:!/;.-')
+    ip = float(ip)
+    return ip
+
+def fqdnToFloat(arr):
+    fqdn = float(len(arr[1]) + 1)
+    return fqdn
 
 def getDatasetFromCsv (csvFile):
     data_arr = []
@@ -71,18 +105,14 @@ def getDatasetFromCsv (csvFile):
         if has_header:
             next(reader)
 
-        value = 0
         for row in reader:
             if row[1] == 'IPv4':
-                data_arr.append([float(int(netaddr.IPAddress(row[0]))), float(''.join(c for c in row[5] if c.isdigit()))])
+                data_arr.append([ipv4ToFloat(row), dateToFloat(row), typeToFloat(row), stringToFloat(row)])
             elif row[1] == 'FQDN':
-                s = row[0]
-                s = ''.join([(str(ord(x) - 96) if x.isalpha() else x) for x in list(row[0])])
-                s = ''.join( c for c in s if c not in '?:!/;.-' )
-                s = float(s)
-                data_arr.append([s, float(''.join(c for c in row[5] if c.isdigit()))])
+                data_arr.append([fqdnIpToFloat(row), dateToFloat(row) , fqdnToFloat(row), stringToFloat(row)])
             elif row[1] == '':
-                data_arr.append([-1.0, float(''.join(c for c in row[5] if c.isdigit()))])
+                empty_type = float(len(row[1]))
+                data_arr.append([-1.0, dateToFloat(row), empty_type, stringToFloat(row)])
     return data_arr
 
 
