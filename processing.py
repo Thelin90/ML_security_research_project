@@ -1,3 +1,9 @@
+# Author: Simon Thelin
+# Version: 1.3
+# Date: 2017-03-24
+#
+# processing.py will handle all sort of csv and data-management such as targets and data
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import csv
@@ -105,57 +111,15 @@ def getDatasetFromCsv (csvFile):
         if has_header:
             next(reader)
 
+
         for row in reader:
             if row[1] == 'IPv4':
-                data_arr.append([ipv4ToFloat(row), dateToFloat(row), typeToFloat(row), stringToFloat(row)])
+                list = []
+                list.append(row[1])
+                data_arr.append([ipv4ToFloat(row)/dateToFloat(row), dateToFloat(row)*ipv4ToFloat(row)/100000.0, dateToFloat(row)/ipv4ToFloat(row)])#, ((dateToFloat(row)+typeToFloat(row))/ipv4ToFloat(row)), (ipv4ToFloat(row)/dateToFloat(row)),dateToFloat(row)/ipv4ToFloat(row), dateToFloat(row)+ipv4ToFloat(row)*30])#, stringToFloat(row)])
             elif row[1] == 'FQDN':
-                data_arr.append([fqdnIpToFloat(row), dateToFloat(row) , fqdnToFloat(row), stringToFloat(row)])
+                data_arr.append([fqdnIpToFloat(row)/dateToFloat(row), dateToFloat(row)*fqdnIpToFloat(row)/2000000.0, dateToFloat(row)/fqdnIpToFloat(row)])#, ((dateToFloat(row)+fqdnToFloat(row))/fqdnIpToFloat(row)), (fqdnIpToFloat(row)/dateToFloat(row)), dateToFloat(row)/fqdnIpToFloat(row),dateToFloat(row)+fqdnIpToFloat(row)*20])#, stringToFloat(row)])
             elif row[1] == '':
                 empty_type = float(len(row[1]))
-                data_arr.append([-1.0, dateToFloat(row), empty_type, stringToFloat(row)])
+                data_arr.append([-1.0/dateToFloat(row), dateToFloat(row)*(-1)/3000000.0, dateToFloat(row)/-1])#, ((dateToFloat(row)+empty_type)/10), (-1.0/((dateToFloat(row)))), dateToFloat(row)/-1.0, dateToFloat(row)+(-1)*100]) #, stringToFloat(row)])
     return data_arr
-
-
-#-------------------------------------------------------------------#
-
-#split_file('Logs/harvest.csv', 'Logs/harvest{0:03d}.csv', 3000000)
-
-#createJsonFile('Logs/harvest007.csv', 'Logs/_targets7.json')
-#targets1=setTargets('Logs/_targets7.json')
-#SML(dataset1, targets1, 0.01, 10)
-
-'''
-X_folds = np.array_split(dataset1, 2)
-y_folds = np.array_split(targets1, 2)
-scores = list()
-for k in range(3):
-    # We use 'list' to copy, in order to 'pop' later on
-    X_train = list(X_folds)
-    X_test = X_train.pop(k)
-    X_train = np.concatenate(X_train)
-    y_train = list(y_folds)
-    y_test = y_train.pop(k)
-    y_train = np.concatenate(y_train)
-    clf2 = svm.SVC(gamma=0.01, C=10)
-    scores.append(clf2.fit(X_train, y_train).score(X_test, y_test))
-    print(scores)
-'''
-#-------------------------------------------------------------------#
-'''
-All data! Took many hours...
-Personal Record for SVC
-Rows: 249026
-Bad targets: 66908
-Accuracy: 98.7961096432
-Gamma: 0.01
-C: 10
-
-With harvest007.csv ...
-Rows: 2976367
-Bad targets: 3575
-Personal Record for SVC
-Accuracy: 99.6130551817
-time elapsed: 162.30s
-Gamma: 0.01
-C: 10
-'''
