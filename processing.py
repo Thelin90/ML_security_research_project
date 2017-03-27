@@ -9,11 +9,10 @@
 import csv
 import json
 import netaddr
-from itertools import chain
 import socket
 
-data=[]
-accuracy=0
+data = []
+accuracy = 0
 
 def createJsonFile(csvFile, jsonFileName):
     csvfile = open(csvFile, 'r')
@@ -54,7 +53,7 @@ def setTargets (fileName):
     least 'size' characters and written to output files whose names
     are pattern.format(1), pattern.format(2), and so on. The last
     output file may be short.
-'''
+
 def split_file(filename, pattern, size):
     with open(filename, 'rb') as f:
         header = next(f)
@@ -67,6 +66,7 @@ def split_file(filename, pattern, size):
                     n += len(line)
                     if n >= size:
                         break
+'''
 
 def stringToFloat(arr):
     if(len(arr[4])>0):
@@ -79,7 +79,7 @@ def stringToFloat(arr):
     else:
         return -3.0
 
-def typeToFloat(arr):
+def ipv4lenToFloat(arr):
     ipv4 = float(len(arr[1]))
     return ipv4
 
@@ -97,7 +97,7 @@ def fqdnIpToFloat(arr):
     ip = float(ip)
     return ip
 
-def fqdnToFloat(arr):
+def fqdnlenToFloat(arr):
     fqdn = float(len(arr[1]) + 1)
     return fqdn
 
@@ -111,15 +111,14 @@ def getDatasetFromCsv (csvFile):
         if has_header:
             next(reader)
 
-
         for row in reader:
             if row[1] == 'IPv4':
                 list = []
                 list.append(row[1])
-                data_arr.append([ipv4ToFloat(row)/dateToFloat(row), dateToFloat(row)*ipv4ToFloat(row)/100000.0, dateToFloat(row)/ipv4ToFloat(row)])#, ((dateToFloat(row)+typeToFloat(row))/ipv4ToFloat(row)), (ipv4ToFloat(row)/dateToFloat(row)),dateToFloat(row)/ipv4ToFloat(row), dateToFloat(row)+ipv4ToFloat(row)*30])#, stringToFloat(row)])
+                data_arr.append([ipv4ToFloat(row)/dateToFloat(row), dateToFloat(row)*ipv4ToFloat(row)/100000.0, dateToFloat(row)/ipv4ToFloat(row), ipv4lenToFloat(row)])#, ((dateToFloat(row)+typeToFloat(row))/ipv4ToFloat(row)), (ipv4ToFloat(row)/dateToFloat(row)),dateToFloat(row)/ipv4ToFloat(row), dateToFloat(row)+ipv4ToFloat(row)*30])#, stringToFloat(row)])
             elif row[1] == 'FQDN':
-                data_arr.append([fqdnIpToFloat(row)/dateToFloat(row), dateToFloat(row)*fqdnIpToFloat(row)/2000000.0, dateToFloat(row)/fqdnIpToFloat(row)])#, ((dateToFloat(row)+fqdnToFloat(row))/fqdnIpToFloat(row)), (fqdnIpToFloat(row)/dateToFloat(row)), dateToFloat(row)/fqdnIpToFloat(row),dateToFloat(row)+fqdnIpToFloat(row)*20])#, stringToFloat(row)])
+                data_arr.append([fqdnIpToFloat(row)/dateToFloat(row), dateToFloat(row)*fqdnIpToFloat(row)/100000.0, dateToFloat(row)/fqdnIpToFloat(row), fqdnlenToFloat(row)])#, ((dateToFloat(row)+fqdnToFloat(row))/fqdnIpToFloat(row)), (fqdnIpToFloat(row)/dateToFloat(row)), dateToFloat(row)/fqdnIpToFloat(row),dateToFloat(row)+fqdnIpToFloat(row)*20])#, stringToFloat(row)])
             elif row[1] == '':
                 empty_type = float(len(row[1]))
-                data_arr.append([-1.0/dateToFloat(row), dateToFloat(row)*(-1)/3000000.0, dateToFloat(row)/-1])#, ((dateToFloat(row)+empty_type)/10), (-1.0/((dateToFloat(row)))), dateToFloat(row)/-1.0, dateToFloat(row)+(-1)*100]) #, stringToFloat(row)])
+                data_arr.append([-1.0/dateToFloat(row), dateToFloat(row)*(-1)/100000.0, dateToFloat(row)/-1, empty_type])#, ((dateToFloat(row)+empty_type)/10), (-1.0/((dateToFloat(row)))), dateToFloat(row)/-1.0, dateToFloat(row)+(-1)*100]) #, stringToFloat(row)])
     return data_arr

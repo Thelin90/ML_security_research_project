@@ -7,6 +7,7 @@
 from processing import getDatasetFromCsv, createJsonFile, setTargets
 from random_forest_classifier import rfc, rfc_final
 from cross_validation import crossValidation
+from OOB_errors_rf import print_oob_error
 
 def main():
     dataset1 = getDatasetFromCsv('Logs/harvest005.csv')
@@ -22,6 +23,7 @@ def main():
         rfc(dataset1, targets1)
         crossValidation(dataset1, targets1)
         rfc_final(dataset1, targets1)
+        print_oob_error(dataset1, targets1)
 
 if __name__ == "__main__":
     main()
