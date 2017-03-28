@@ -1,9 +1,3 @@
-import matplotlib.pyplot as plt
-
-from collections import OrderedDict
-from sklearn.datasets import make_classification
-from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
-
 # Author: Kian Ho <hui.kian.ho@gmail.com>
 #         Gilles Louppe <g.louppe@gmail.com>
 #         Andreas Mueller <amueller@ais.uni-bonn.de>
@@ -11,8 +5,12 @@ from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 # License: BSD 3 Clause
 #
 # Modified: Simon Thelin
-# Date: 2017-03-27
+# Date: 2017-03-26
 #
+
+import matplotlib.pyplot as plt
+from collections import OrderedDict
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 
 def print_oob_error(data, targets):
 
@@ -40,8 +38,10 @@ def print_oob_error(data, targets):
     error_rate = OrderedDict((label, []) for label, _ in ensemble_clfs)
 
     # Range of `n_estimators` values to explore.
-    min_estimators = 1
-    max_estimators = 300
+    min_estimators = 5
+    max_estimators = 175
+    lowest_error = 100000
+    estimators = -1
 
     for label, clf in ensemble_clfs:
         for i in range(min_estimators, max_estimators + 1):
@@ -52,11 +52,17 @@ def print_oob_error(data, targets):
             oob_error = 1 - clf.oob_score_
             error_rate[label].append((i, oob_error))
 
+            if(oob_error < lowest_error):
+                lowest_error=oob_error
+                estimators=i
+
     # Generate the "OOB error rate" vs. "n_estimators" plot.
     for label, clf_err in error_rate.items():
         xs, ys = zip(*clf_err)
         plt.plot(xs, ys, label=label)
 
+    print "Lowest error: ", lowest_error*100
+    print "Best n_est: ",estimators
     plt.xlim(min_estimators, max_estimators)
     plt.xlabel("n_estimators")
     plt.ylabel("OOB error rate")

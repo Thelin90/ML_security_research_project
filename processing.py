@@ -14,6 +14,9 @@ import socket
 data = []
 accuracy = 0
 
+#
+#
+#
 def createJsonFile(csvFile, jsonFileName):
     csvfile = open(csvFile, 'r')
     jsonfile = open(jsonFileName, 'w')
@@ -24,6 +27,9 @@ def createJsonFile(csvFile, jsonFileName):
     jsonfile.close()
     csvfile.close()
 
+#
+#
+#
 def setTargets (fileName):
     arr=[]
     ret_arr=[]
@@ -68,25 +74,24 @@ def split_file(filename, pattern, size):
                         break
 '''
 
-def stringToFloat(arr):
-    if(len(arr[4])>0):
-        notes = ''.join([(str(ord(x) - 96) if x.isalpha() else x) for x in list(arr[4])])
-        notes = ''.join(c for c in notes if c not in '?:!/;.-')
-        notes = notes.replace(" ", "")
-        notes = float(notes)
-        notes = (notes/10000)
-        return notes
-    else:
-        return -3.0
 
+#
+#
+#
 def ipv4lenToFloat(arr):
     ipv4 = float(len(arr[1]))
     return ipv4
 
+#
+#
+#
 def dateToFloat(arr):
     date = float(''.join(c for c in arr[5] if c.isdigit()))
     return date
 
+#
+#
+#
 def ipv4ToFloat(arr):
     ip = float(int(netaddr.IPAddress(arr[0])))
     return ip
@@ -97,10 +102,16 @@ def fqdnIpToFloat(arr):
     ip = float(ip)
     return ip
 
+#
+#
+#
 def fqdnlenToFloat(arr):
     fqdn = float(len(arr[1]) + 1)
     return fqdn
 
+#
+#
+#
 def getDatasetFromCsv (csvFile):
     data_arr = []
     with open(csvFile, 'rb') as f:
@@ -115,10 +126,10 @@ def getDatasetFromCsv (csvFile):
             if row[1] == 'IPv4':
                 list = []
                 list.append(row[1])
-                data_arr.append([ipv4ToFloat(row)/dateToFloat(row), dateToFloat(row)*ipv4ToFloat(row)/100000.0, dateToFloat(row)/ipv4ToFloat(row), ipv4lenToFloat(row)])#, ((dateToFloat(row)+typeToFloat(row))/ipv4ToFloat(row)), (ipv4ToFloat(row)/dateToFloat(row)),dateToFloat(row)/ipv4ToFloat(row), dateToFloat(row)+ipv4ToFloat(row)*30])#, stringToFloat(row)])
+                data_arr.append(([(ipv4ToFloat(row)*ipv4ToFloat(row))/dateToFloat(row), (ipv4lenToFloat(row)*dateToFloat(row)*ipv4lenToFloat(row))/ipv4ToFloat(row)]))
             elif row[1] == 'FQDN':
-                data_arr.append([fqdnIpToFloat(row)/dateToFloat(row), dateToFloat(row)*fqdnIpToFloat(row)/100000.0, dateToFloat(row)/fqdnIpToFloat(row), fqdnlenToFloat(row)])#, ((dateToFloat(row)+fqdnToFloat(row))/fqdnIpToFloat(row)), (fqdnIpToFloat(row)/dateToFloat(row)), dateToFloat(row)/fqdnIpToFloat(row),dateToFloat(row)+fqdnIpToFloat(row)*20])#, stringToFloat(row)])
+                data_arr.append([(fqdnIpToFloat(row)*fqdnIpToFloat(row))/dateToFloat(row), (fqdnlenToFloat(row)*dateToFloat(row)*fqdnIpToFloat(row))/fqdnIpToFloat(row)])
             elif row[1] == '':
                 empty_type = float(len(row[1]))
-                data_arr.append([-1.0/dateToFloat(row), dateToFloat(row)*(-1)/100000.0, dateToFloat(row)/-1, empty_type])#, ((dateToFloat(row)+empty_type)/10), (-1.0/((dateToFloat(row)))), dateToFloat(row)/-1.0, dateToFloat(row)+(-1)*100]) #, stringToFloat(row)])
+                data_arr.append([(-1.0*3)/dateToFloat(row), (empty_type*dateToFloat(row)*-1)/-1])
     return data_arr

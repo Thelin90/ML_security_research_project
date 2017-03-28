@@ -23,8 +23,8 @@ def rfc (data, targets):
 def rfc_final(data, targets):
     print "Lets calculate the accuracy... loading"
     start_time = time.time()
-    print "After K-fold cross validating: RandomForestClassifier(n_estimators=20, max_depth=None, max_features='auto', bootstrap=True, min_samples_split=10, min_samples_leaf=1, n_jobs=1)"
-    clf = RandomForestClassifier(n_estimators=20, max_depth=None, max_features='auto', bootstrap=True, min_samples_split=10, min_samples_leaf=1, n_jobs=1)
+    print "After K-fold cross validating: RandomForestClassifier(n_estimators=172, max_depth=None, max_features='auto', bootstrap=True, min_samples_split=20, min_samples_leaf=1, n_jobs=1"
+    clf = RandomForestClassifier(n_estimators=30, max_depth=None, max_features='auto', bootstrap=True, min_samples_split=20, min_samples_leaf=1, n_jobs=1)
     clf.fit(data, targets)
     importances = clf.feature_importances_
     print importances

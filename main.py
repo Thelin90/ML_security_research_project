@@ -17,13 +17,16 @@ def main():
     targets1 = setTargets('Logs/_targets5.json')
     bad_targets = targets1.count(1)
 
+    print len(dataset1)
+    print len(targets1)
+
     if (bad_targets > 0):
         print "-----------------------------------------------------"
         print "Bad targets found"
         rfc(dataset1, targets1)
+        #print_oob_error(dataset1, targets1) #highest error 23.6746941602% with number of estimators to: 172
         crossValidation(dataset1, targets1)
         rfc_final(dataset1, targets1)
-        print_oob_error(dataset1, targets1)
 
 if __name__ == "__main__":
     main()
