@@ -123,5 +123,5 @@ def getDatasetFromCsv(csvFile):
                 data_arr.append([(fqdnIpToFloat(row)*fqdnIpToFloat(row))/dateToFloat(row), (fqdnlenToFloat(row)*dateToFloat(row)*fqdnIpToFloat(row))/fqdnIpToFloat(row)])
             elif row[1] == '':
                 empty_type = float(len(row[1]))
-                data_arr.append([(-1.0*3)/dateToFloat(row), (empty_type*dateToFloat(row)*-1)/-1])
+                data_arr.append([(-1.0*3)/dateToFloat(row), -1])
     return data_arr
