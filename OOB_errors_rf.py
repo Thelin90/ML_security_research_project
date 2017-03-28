@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 
+# Perform the OOB and according to documentation the training will be 66% and test 33%.
+# the code is modified for this specific example.
 def print_oob_error(data, targets):
 
     RANDOM_STATE = 123
@@ -38,6 +40,7 @@ def print_oob_error(data, targets):
     error_rate = OrderedDict((label, []) for label, _ in ensemble_clfs)
 
     # Range of `n_estimators` values to explore.
+    # Variables declared to maintain the lowest error and n_estimators
     min_estimators = 5
     max_estimators = 175
     lowest_error = 100000
@@ -61,8 +64,11 @@ def print_oob_error(data, targets):
         xs, ys = zip(*clf_err)
         plt.plot(xs, ys, label=label)
 
+    #Print lowest error and optimal n_estimation according to the OOB
     print "Lowest error: ", lowest_error*100
     print "Best n_est: ",estimators
+
+    # Print the graph
     plt.xlim(min_estimators, max_estimators)
     plt.xlabel("n_estimators")
     plt.ylabel("OOB error rate")

@@ -11,12 +11,12 @@ import json
 import netaddr
 import socket
 
+# Variables used within the processing.py
 data = []
 accuracy = 0
 
-#
-#
-#
+
+# Creates a JSON file that is used to set the targets for the application
 def createJsonFile(csvFile, jsonFileName):
     csvfile = open(csvFile, 'r')
     jsonfile = open(jsonFileName, 'w')
@@ -27,9 +27,9 @@ def createJsonFile(csvFile, jsonFileName):
     jsonfile.close()
     csvfile.close()
 
-#
-#
-#
+
+# Defines the targets for the given data-set row, depending on the note it has
+# been marked with.
 def setTargets (fileName):
     arr=[]
     ret_arr=[]
@@ -75,44 +75,36 @@ def split_file(filename, pattern, size):
 '''
 
 
-#
-#
-#
+
+# Returns the float value of the length of the attribute IPv4=4
 def ipv4lenToFloat(arr):
     ipv4 = float(len(arr[1]))
     return ipv4
 
-#
-#
-#
-def dateToFloat(arr):
-    date = float(''.join(c for c in arr[5] if c.isdigit()))
-    return date
+# Returns the length of FQDN+1=5
+def fqdnlenToFloat(arr):
+    fqdn = float(len(arr[1]) + 1)
+    return fqdn
 
-#
-#
-#
+# Returns the float value from the IPv4
 def ipv4ToFloat(arr):
     ip = float(int(netaddr.IPAddress(arr[0])))
     return ip
 
+# Returns the float value from the FQDN address
 def fqdnIpToFloat(arr):
     ip = socket.gethostbyname(arr[0])
     ip = ''.join(c for c in ip if c not in '?:!/;.-')
     ip = float(ip)
     return ip
 
-#
-#
-#
-def fqdnlenToFloat(arr):
-    fqdn = float(len(arr[1]) + 1)
-    return fqdn
+# Returns the date as an float
+def dateToFloat(arr):
+    date = float(''.join(c for c in arr[5] if c.isdigit()))
+    return date
 
-#
-#
-#
-def getDatasetFromCsv (csvFile):
+# Reads the csv file of harvest005 and creates the dataset from it to an list of lists.
+def getDatasetFromCsv(csvFile):
     data_arr = []
     with open(csvFile, 'rb') as f:
         has_header = csv.Sniffer().has_header(f.read(1024))

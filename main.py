@@ -24,7 +24,7 @@ def main():
         print "-----------------------------------------------------"
         print "Bad targets found"
         rfc(dataset1, targets1)
-        #print_oob_error(dataset1, targets1) #highest error 23.6746941602% with number of estimators to: 172
+        print_oob_error(dataset1, targets1) #highest error 23.6746941602% with number of estimators to: 172
         crossValidation(dataset1, targets1)
         rfc_final(dataset1, targets1)
 
